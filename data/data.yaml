@@ -1,0 +1,17 @@
+# YOLO Dataset Configuration
+# Path to dataset directory
+path: data
+
+# Train, validation, and test image directories (relative to 'path')
+train: images/train
+val: images/val
+test: images/test
+
+# Number of classes
+nc: 2
+
+# Class names
+names:
+  0: pill
+  1: capsule
+
