@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from ultralytics import YOLO
 import cv2
+import kagglehub
 
 
 def main():
@@ -15,6 +16,7 @@ Examples:
   python main.py --dir data/images/
   python main.py --webcam
   python main.py --train --epochs 100
+  python main.py --download-dataset
         """
     )
     
@@ -27,8 +29,25 @@ Examples:
     parser.add_argument('--epochs', type=int, default=100, help='Number of training epochs (for training)')
     parser.add_argument('--save', action='store_true', default=True, help='Save detection results')
     parser.add_argument('--show', action='store_true', help='Show detection results in window')
+    parser.add_argument('--download-dataset', action='store_true', help='Download dataset from Kaggle')
+    parser.add_argument('--dataset', type=str, default='tommyngx/epillid-data-v1', help='Kaggle dataset identifier')
     
     args = parser.parse_args()
+    
+    if args.download_dataset:
+        print("=" * 60)
+        print("Downloading Dataset from Kaggle")
+        print("=" * 60)
+        try:
+            print(f"Downloading dataset: {args.dataset}")
+            path = kagglehub.dataset_download(args.dataset)
+            print(f"Path to dataset files: {path}")
+            print("Dataset downloaded successfully!")
+        except Exception as e:
+            print(f"Error downloading dataset: {e}")
+            print("Make sure you have Kaggle credentials configured.")
+            print("See: https://github.com/Kaggle/kaggle-api#api-credentials")
+        return
     
     if args.train:
         print("=" * 60)
