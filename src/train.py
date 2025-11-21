@@ -27,9 +27,9 @@ def create_data_yaml(data_dir='data', classes=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Train YOLOv8 model for pill/capsule detection')
-    parser.add_argument('--model', type=str, default='yolov8n.pt',
-                       help='Base model (yolov8n.pt, yolov8s.pt, yolov8m.pt, yolov8l.pt, yolov8x.pt)')
+    parser = argparse.ArgumentParser(description='Train YOLOv11 model for pill/capsule detection')
+    parser.add_argument('--model', type=str, default='yolov11n.pt',
+                       help='Base model (yolov11n.pt, yolov11s.pt, yolov11m.pt, yolov11l.pt, yolov11x.pt)')
     parser.add_argument('--data', type=str, default='data/data.yaml',
                        help='Path to data.yaml file')
     parser.add_argument('--epochs', type=int, default=100,

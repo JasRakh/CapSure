@@ -36,13 +36,12 @@ Examples:
     
     if args.download_dataset:
         print("=" * 60)
-        print("Downloading Dataset from Kaggle")
+        print("Downloading and Preparing Dataset from Kaggle")
         print("=" * 60)
+        from src.download_images import download_and_prepare_dataset
         try:
-            print(f"Downloading dataset: {args.dataset}")
-            path = kagglehub.dataset_download(args.dataset)
-            print(f"Path to dataset files: {path}")
-            print("Dataset downloaded successfully!")
+            download_and_prepare_dataset(args.dataset)
+            print("Dataset downloaded and prepared successfully!")
         except Exception as e:
             print(f"Error downloading dataset: {e}")
             print("Make sure you have Kaggle credentials configured.")
@@ -68,10 +67,10 @@ Examples:
         model = YOLO(args.weights)
     else:
         print(f"Custom model not found at {args.weights}")
-        print("  Using pretrained YOLOv8n model (trained on COCO dataset)")
+        print("  Using pretrained YOLOv11n model (trained on COCO dataset)")
         print("  Note: This model doesn't recognize pills. Train a custom model for accurate detection.")
         print("  Run: python main.py --train")
-        model = YOLO('yolov8n.pt')
+        model = YOLO('yolov11n.pt')
     
     if args.webcam:
         source = 0

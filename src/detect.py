@@ -27,8 +27,8 @@ def main():
     
     if not os.path.exists(args.weights):
         print(f"Model weights not found at {args.weights}")
-        print("Using pretrained YOLOv8n model for demonstration...")
-        model = YOLO('yolov8n.pt')
+        print("Using pretrained YOLOv11n model for demonstration...")
+        model = YOLO('yolov11n.pt')
     else:
         print(f"Loading model from {args.weights}")
         model = YOLO(args.weights)

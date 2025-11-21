@@ -10,9 +10,9 @@ def example_detection():
         print(f"Loading custom model from {model_path}")
         model = YOLO(model_path)
     else:
-        print("Custom model not found. Using pretrained YOLOv8n for demonstration.")
+        print("Custom model not found. Using pretrained YOLOv11n for demonstration.")
         print("Train your own model using: python src/train.py")
-        model = YOLO('yolov8n.pt')
+        model = YOLO('yolov11n.pt')
     
     image_path = 'data/raw/example.jpg'
     if os.path.exists(image_path):
@@ -46,7 +46,7 @@ def example_webcam():
     if os.path.exists(model_path):
         model = YOLO(model_path)
     else:
-        model = YOLO('yolov8n.pt')
+        model = YOLO('yolov11n.pt')
     
     print("\nStarting webcam detection...")
     print("Press 'q' to quit")
@@ -67,7 +67,7 @@ def example_batch_detection():
     if os.path.exists(model_path):
         model = YOLO(model_path)
     else:
-        model = YOLO('yolov8n.pt')
+        model = YOLO('yolov11n.pt')
     
     raw_dir = Path('data/raw')
     if raw_dir.exists():
