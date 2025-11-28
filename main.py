@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 from ultralytics import YOLO
 import cv2
-import kagglehub
 
 
 def main():
@@ -16,7 +15,6 @@ Examples:
   python main.py --dir data/images/
   python main.py --webcam
   python main.py --train --epochs 100
-  python main.py --download-dataset
         """
     )
     
@@ -24,29 +22,14 @@ Examples:
     parser.add_argument('--dir', type=str, help='Path to directory with images')
     parser.add_argument('--webcam', action='store_true', help='Use webcam for detection')
     parser.add_argument('--train', action='store_true', help='Train the model')
+    parser.add_argument('--prepare-dataset', action='store_true', help='Split test images into train/val/test before training')
     parser.add_argument('--weights', type=str, default='models/best.pt', help='Path to model weights')
     parser.add_argument('--conf', type=float, default=0.25, help='Confidence threshold')
     parser.add_argument('--epochs', type=int, default=100, help='Number of training epochs (for training)')
     parser.add_argument('--save', action='store_true', default=True, help='Save detection results')
     parser.add_argument('--show', action='store_true', help='Show detection results in window')
-    parser.add_argument('--download-dataset', action='store_true', help='Download dataset from Kaggle')
-    parser.add_argument('--dataset', type=str, default='tommyngx/epillid-data-v1', help='Kaggle dataset identifier')
     
     args = parser.parse_args()
-    
-    if args.download_dataset:
-        print("=" * 60)
-        print("Downloading and Preparing Dataset from Kaggle")
-        print("=" * 60)
-        from src.download_images import download_and_prepare_dataset
-        try:
-            download_and_prepare_dataset(args.dataset)
-            print("Dataset downloaded and prepared successfully!")
-        except Exception as e:
-            print(f"Error downloading dataset: {e}")
-            print("Make sure you have Kaggle credentials configured.")
-            print("See: https://github.com/Kaggle/kaggle-api#api-credentials")
-        return
     
     if args.train:
         print("=" * 60)
@@ -54,7 +37,10 @@ Examples:
         print("=" * 60)
         from src.train import main as train_main
         import sys
-        sys.argv = ['train.py', '--epochs', str(args.epochs)]
+        train_args = ['train.py', '--epochs', str(args.epochs)]
+        if args.prepare_dataset:
+            train_args.append('--prepare-dataset')
+        sys.argv = train_args
         train_main()
         return
     
@@ -67,10 +53,15 @@ Examples:
         model = YOLO(args.weights)
     else:
         print(f"Custom model not found at {args.weights}")
-        print("  Using pretrained YOLOv11n model (trained on COCO dataset)")
-        print("  Note: This model doesn't recognize pills. Train a custom model for accurate detection.")
-        print("  Run: python main.py --train")
-        model = YOLO('yolov11n.pt')
+        # Check if yolov11n.pt exists locally, otherwise use model name for auto-download
+        if os.path.exists('yolov11n.pt'):
+            print("  Using local yolov11n.pt model (trained on COCO dataset)")
+            model = YOLO('yolov11n.pt')
+        else:
+            print("  Using pretrained YOLOv11n model (trained on COCO dataset)")
+            print("  Note: This model doesn't recognize pills. Train a custom model for accurate detection.")
+            print("  Run: python main.py --train")
+            model = YOLO('yolov11n.pt')  # Will auto-download if needed
     
     if args.webcam:
         source = 0
